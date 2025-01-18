@@ -1,26 +1,22 @@
-"use client";
 import { useAuth } from "@/providers/auth.provider";
 import Logo from "./logo";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { getUser } from "@/actions";
+import { toAbbr } from "@/lib/utils";
 
-export function Navbar() {
-  const {
-    auth: { user, state: authState },
-  } = useAuth();
+export async function Navbar() {
+  const user = await getUser();
   return (
     <header className="bg-background/40 sticky top-0 shadow backdrop-blur-md z-50 flex items-center h-[72px]">
       <MaxWidthWrapper className="flex justify-between p-4 items-center">
         <Logo />
         <div className="flex items-center">
-          {authState == "loading" ? (
-            <Loader2 className="animate-spin" />
-          ) : user ? (
+          {user ? (
             <Avatar>
               <AvatarImage />
-              <AvatarFallback>SR</AvatarFallback>
+              <AvatarFallback>{toAbbr(user.name)}</AvatarFallback>
             </Avatar>
           ) : (
             <>

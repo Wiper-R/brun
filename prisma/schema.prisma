@@ -1,66 +1,67 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String    @id @default(cuid())
-    name      String
-    username  String    @unique
-    email     String    @unique
-    password  String
-    avatarUrl String?
-    posts     Post[]
-    createdAt DateTime  @default(now())
-    Likes     Like[]
-    Comment   Comment[]
-    followers Follow[]  @relation(name: "Followers")
-    following Follow[]  @relation(name: "Following")
+  id        String    @id @default(cuid())
+  name      String
+  username  String    @unique
+  email     String    @unique
+  password  String
+  avatarUrl String?
+  posts     Post[]
+  createdAt DateTime  @default(now())
+  Likes     Like[]
+  Comment   Comment[]
+  followers Follow[]  @relation(name: "Followers")
+  following Follow[]  @relation(name: "Following")
 }
 
 model Post {
-    id        String    @id @default(cuid())
-    content   String
-    User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String
-    numLikes  Int       @default(0)
-    imageUrl  String?
-    likes     Like[]
-    comments  Comment[]
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  content   String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  numLikes  Int       @default(0)
+  imageUrl  String?
+  likes     Like[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Like {
-    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId    String
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
 
-    @@unique([postId, userId])
+  @@unique([postId, userId])
 }
 
 model Comment {
-    id        String   @id @default(cuid())
-    user      User?    @relation(fields: [userId], references: [id])
-    post      Post     @relation(fields: [postId], references: [id])
-    content   String
-    userId    String
-    postId    String
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  author    User?    @relation(fields: [authorId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  content   String
+  authorId  String
+  postId    String
+  createdAt DateTime @default(now())
 }
 
 model Follow {
-    followeeId String
-    followee   User     @relation(name: "Followers", fields: [followeeId], references: [id])
-    followerId String
-    follower   User     @relation(name: "Following", fields: [followerId], references: [id])
-    createdAt  DateTime @default(now())
+  followeeId String
+  followee   User     @relation(name: "Followers", fields: [followeeId], references: [id])
+  followerId String
+  follower   User     @relation(name: "Following", fields: [followerId], references: [id])
+  createdAt  DateTime @default(now())
 
-    @@unique([followeeId, followerId])
+  @@unique([followeeId, followerId])
 }

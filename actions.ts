@@ -1,15 +1,14 @@
 "use server";
 
 import { ApiError, serverActionWrapper } from "@/lib/server-action-helper";
-import { createSecretKey } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { compare, hash } from "@/lib/scrypt";
 import { SessionData, SigninSchema, SignupSchema } from "@/types";
 import { cookies } from "next/headers";
-import { jwtVerify, SignJWT } from "jose";
 import env from "@/env";
-import { z } from "zod";
 import { getIronSession } from "iron-session";
+import { z } from "zod";
+import getSessionData from "./lib/iron-session";
 
 export const signup = serverActionWrapper({
   schema: SignupSchema,
@@ -45,13 +44,6 @@ export const signin = serverActionWrapper({
     if (!valid) {
       throw Invalid;
     }
-    // TODO: Set expiry for jwt and cookies
-    // const secretKey = createSecretKey(env.JWT_SECRET, "utf-8");
-    // const token = await new SignJWT()
-    //   .setSubject(user.id)
-    //   .setProtectedHeader({ alg: "HS256" })
-    //   .sign(secretKey);
-    // (await cookies()).set("token", token);
     const session = await getIronSession<SessionData>(await cookies(), {
       cookieName: "session",
       password: env.JWT_SECRET,
@@ -67,6 +59,15 @@ export const getUser = async () => {
     cookieName: "session",
     password: env.JWT_SECRET,
   });
+  if (!session.userId) return null;
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   return user;
 };
+
+export const logout = serverActionWrapper({
+  schema: z.void(),
+  async callback() {
+    const session = await getSessionData();
+    session.destroy();
+  },
+});

@@ -4,9 +4,10 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/navbar";
 import { AuthProvider } from "@/providers/auth.provider";
+import QueryClientProvider from "@/providers/queryclient.provider";
 
 export const metadata: Metadata = {
-  title: "Social Media",
+  title: "Brun",
   description: "Share your memories with others",
 };
 
@@ -22,15 +23,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <AuthProvider>
-        <body
-          className={`${jost.variable} antialiased min-h-screen relative flex flex-col`}
-        >
-          <Navbar />
-          {children}
-          <Toaster />
-        </body>
-      </AuthProvider>
+      <body
+        className={`${jost.variable} antialiased min-h-screen relative flex flex-col bg-gray-100`}
+      >
+        <AuthProvider>
+          <QueryClientProvider>
+            <Navbar />
+            {children}
+            <Toaster />
+          </QueryClientProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

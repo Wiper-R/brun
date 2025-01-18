@@ -4,6 +4,7 @@ import {
   Heart,
   LucideIcon,
   MessageCircle,
+  Search,
   StickyNote,
   User2Icon,
   UserRoundCheck,
@@ -45,7 +46,7 @@ export default function Sidebar({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        "flex w-full flex-col flex-grow  h-full max-w-[240px] border-r border-border p-2 sticky top-0",
+        "flex w-full flex-col flex-grow  h-full max-w-[240px] border-r border-border p-2 sticky top-0 bg-white",
         className,
       )}
     >
@@ -61,7 +62,7 @@ export default function Sidebar({ className }: { className?: string }) {
       </Link>
       <hr className="my-4" />
       <SidebarItem label="Your Profile" icon={User2Icon} href="/profile" />
-      <SidebarItem label="Friends" icon={UsersIcon} href="/friends" />
+      <SidebarItem label="Search" icon={Search} href="/search" />
       <SidebarItem
         label="Saved Posts"
         icon={BookmarkIcon}
