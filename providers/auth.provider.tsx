@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser } from "@/app/(auth)/actions";
+import { getUser } from "@/actions";
 import { createContextHelper } from "@/lib/create-context-helper";
 import { User as PrismaUser } from "@prisma/client";
 import { PropsWithChildren, useCallback, useEffect, useReducer } from "react";
@@ -49,9 +49,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const fetchUser = useCallback(async () => {
     dispatch({ type: "loading" });
-    const result = await getUser();
-    if (result.success) {
-      dispatch({ type: "authenticated", user: result.data });
+    const user = await getUser();
+    if (user) {
+      dispatch({ type: "authenticated", user });
     } else {
       dispatch({ type: "unauthenticated" });
     }

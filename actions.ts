@@ -4,11 +4,12 @@ import { ApiError, serverActionWrapper } from "@/lib/server-action-helper";
 import { createSecretKey } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { compare, hash } from "@/lib/scrypt";
-import { SigninSchema, SignupSchema } from "@/types";
+import { SessionData, SigninSchema, SignupSchema } from "@/types";
 import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
 import env from "@/env";
 import { z } from "zod";
+import { getIronSession } from "iron-session";
 
 export const signup = serverActionWrapper({
   schema: SignupSchema,
@@ -45,33 +46,27 @@ export const signin = serverActionWrapper({
       throw Invalid;
     }
     // TODO: Set expiry for jwt and cookies
-    const secretKey = createSecretKey(env.JWT_SECRET, "utf-8");
-    const token = await new SignJWT()
-      .setSubject(user.id)
-      .setProtectedHeader({ alg: "HS256" })
-      .sign(secretKey);
-    (await cookies()).set("token", token);
+    // const secretKey = createSecretKey(env.JWT_SECRET, "utf-8");
+    // const token = await new SignJWT()
+    //   .setSubject(user.id)
+    //   .setProtectedHeader({ alg: "HS256" })
+    //   .sign(secretKey);
+    // (await cookies()).set("token", token);
+    const session = await getIronSession<SessionData>(await cookies(), {
+      cookieName: "session",
+      password: env.JWT_SECRET,
+    });
+
+    session.userId = user.id;
+    await session.save();
   },
 });
 
-export const getUser = serverActionWrapper({
-  schema: z.void(),
-  async callback() {
-    const NotAuthenticated = new ApiError({
-      message: "Not authenticated",
-      status: 401,
-    });
-    const token = (await cookies()).get("token");
-    if (!token) throw NotAuthenticated;
-    const secretKey = createSecretKey(env.JWT_SECRET, "utf-8");
-    try {
-      const { payload } = await jwtVerify(token.value, secretKey);
-      const sub = payload.sub!;
-      const user = await prisma.user.findUnique({ where: { id: sub } });
-      if (!user) throw NotAuthenticated;
-      return user;
-    } catch (e) {
-      throw NotAuthenticated;
-    }
-  },
-});
+export const getUser = async () => {
+  const session = await getIronSession<SessionData>(await cookies(), {
+    cookieName: "session",
+    password: env.JWT_SECRET,
+  });
+  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  return user;
+};

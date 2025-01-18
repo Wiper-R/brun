@@ -1,6 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,9 +18,10 @@ import { Input } from "@/components/ui/input";
 import { SigninSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signin } from "../actions";
+import { signin } from "../../../actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Page() {
   const router = useRouter();
@@ -32,8 +39,7 @@ export default function Page() {
     }
   }
   return (
-    <div className="flex items-center flex-col">
-      <h3 className="text-3xl font-bold my-10">Social Media</h3>
+    <div className="flex items-center flex-col py-10">
       <Card className="max-w-[400px] mx-auto w-full shadow-lg">
         <CardHeader>
           <CardTitle>Signin</CardTitle>
@@ -65,7 +71,10 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Signup</Button>
+              <Button type="submit">Signin</Button>
+              <div className="text-xs ml-auto">
+                Don't have an account? <Link href="/signup">Create</Link>
+              </div>
             </form>
           </Form>
         </CardContent>

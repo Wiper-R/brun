@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { getUser, signin, signup } from "../actions";
+import { getUser, signin, signup } from "../../../actions";
 import { SignupSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -32,8 +32,7 @@ export default function Page() {
     }
   }
   return (
-    <div className="flex items-center flex-col">
-      <h3 className="text-3xl font-bold my-10">Social Media</h3>
+    <div className="flex items-center flex-col py-10">
       <Card className="max-w-[400px] mx-auto w-full shadow-lg">
         <CardHeader>
           <CardTitle>Signup</CardTitle>

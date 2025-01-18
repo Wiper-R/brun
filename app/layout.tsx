@@ -21,9 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <AuthProvider>
-        <body className={`${jost.variable} antialiased`}>
+        <body
+          className={`${jost.variable} antialiased min-h-screen relative flex flex-col`}
+        >
           <Navbar />
           {children}
           <Toaster />
