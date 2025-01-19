@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${jost.variable} antialiased min-h-screen relative flex flex-col bg-gray-100`}
+        className={`${jost.variable} antialiased min-h-screen relative flex flex-col`}
       >
         <AuthProvider>
           <QueryClientProvider>

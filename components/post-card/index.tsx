@@ -1,13 +1,14 @@
 import { Bookmark, Heart, MessageCircle, Share2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import { cn, formatTime, toAbbr } from "@/lib/utils";
 import { PostWithAuthor } from "@/types";
 import { likePost } from "@/app/(app)/actions";
+import { PostCommentButton } from "./comment-button";
 
 export function PostCard({ post }: { post: PostWithAuthor }) {
   return (
-    <div className="p-4 rounded border flex flex-col gap-4 bg-white">
+    <div className="p-4 rounded border flex flex-col gap-4 bg-white border-border">
       <div className="flex gap-2 items-center">
         <Avatar>
           <AvatarImage />
@@ -39,16 +40,16 @@ export function PostCard({ post }: { post: PostWithAuthor }) {
           variant="outline"
           size="sm"
           onClick={async () => await likePost(post.id)}
+          className={cn(
+            post.likes.length > 0 && "text-red-500 hover:text-red-500 ",
+          )}
         >
           <Heart
             className={cn(post.likes.length > 0 && "text-red-500 fill-red-500")}
           />
           {post.numLikes > 0 && <span>{post.numLikes}</span>}
         </Button>
-        <Button variant="outline" size="sm">
-          <MessageCircle className="" />
-          {post._count.comments > 0 && <span>{post._count.comments}</span>}
-        </Button>
+        <PostCommentButton post={post} />
         <div className="flex-grow" />
         <Button variant="outline" size="sm">
           <Bookmark className="" />

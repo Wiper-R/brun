@@ -32,4 +32,10 @@ export type CreatePostSchema = z.infer<typeof CreatePostSchema>;
 export const GetFeedSchema = z.object({});
 export type GetFeedSchema = z.infer<typeof GetFeedSchema>;
 
+export const PostCommentSchema = z.object({
+  content: z.string(),
+  postId: z.string(),
+});
+export type PostCommentSchema = z.infer<typeof PostCommentSchema>;
+
 export * from "./database";

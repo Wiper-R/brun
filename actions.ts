@@ -71,3 +71,14 @@ export const logout = serverActionWrapper({
     session.destroy();
   },
 });
+
+export const postComment = serverActionWrapper({
+  schema: z.object({ content: z.string(), postId: z.string() }),
+  async callback({ content, postId }) {
+    const session = await getSessionData();
+    const comment = await prisma.comment.create({
+      data: { content, postId, authorId: session.userId! },
+    });
+    return comment;
+  },
+});
