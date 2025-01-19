@@ -1,6 +1,6 @@
 "use client";
 
-import { likePost } from "@/app/(app)/actions";
+import { likePost, savePost } from "@/app/(app)/actions";
 import { Button } from "../ui/button";
 import { PostWithAuthor } from "@/types";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,11 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
       </Button>
       <PostCommentButton post={post} />
       <div className="flex-grow" />
-      <Button variant="outline" size="sm">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={async () => await savePost(post.id)}
+      >
         <Bookmark className="" />
       </Button>
       <Button variant="outline" size="sm">

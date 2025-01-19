@@ -98,3 +98,13 @@ export const getComments = serverActionWrapper({
     return comments;
   },
 });
+
+export const savePost = serverActionWrapper({
+  schema: z.string(),
+  async callback(postId) {
+    const session = await getSessionData();
+    await prisma.savedPost.create({
+      data: { postId, userId: session.userId! },
+    });
+  },
+});
