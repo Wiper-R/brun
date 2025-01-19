@@ -3,9 +3,9 @@
 import getSessionData from "@/lib/iron-session";
 import { ApiError, serverActionWrapper } from "@/lib/server-action-helper";
 import {
+  CommentWithAuthor,
   CreatePostSchema,
   GetFeedSchema,
-  GetPostsSchema,
   PostWithAuthor,
 } from "@/types";
 import { prisma } from "@/lib/prisma";
@@ -73,6 +73,28 @@ export const likePost = serverActionWrapper({
 export const getPost = serverActionWrapper({
   schema: z.string(),
   async callback(postId) {
-    return await prisma.post.findFirst({ where: { id: postId } });
+    const session = await getSessionData();
+    return await prisma.post.findFirst({
+      where: { id: postId },
+      include: {
+        author: { select: { name: true, avatarUrl: true, username: true } },
+        _count: { select: { comments: true } },
+        likes: { where: { userId: session.userId! }, select: { id: true } },
+      },
+    });
+  },
+});
+
+export const getComments = serverActionWrapper({
+  schema: z.string(),
+  async callback(postId) {
+    const comments: CommentWithAuthor[] = await prisma.comment.findMany({
+      where: { postId },
+      include: {
+        author: { select: { avatarUrl: true, username: true, name: true } },
+      },
+    });
+
+    return comments;
   },
 });

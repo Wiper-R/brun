@@ -1,10 +1,8 @@
-import { useAuth } from "@/providers/auth.provider";
 import Logo from "./logo";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getUser } from "@/actions";
-import { toAbbr } from "@/lib/utils";
+import { UserAvatar } from "./user-avatar";
 
 export async function Navbar() {
   const user = await getUser();
@@ -14,10 +12,7 @@ export async function Navbar() {
         <Logo />
         <div className="flex items-center">
           {user ? (
-            <Avatar>
-              <AvatarImage />
-              <AvatarFallback>{toAbbr(user.name)}</AvatarFallback>
-            </Avatar>
+            <UserAvatar {...user} />
           ) : (
             <>
               <Button variant="ghost">Signup</Button>

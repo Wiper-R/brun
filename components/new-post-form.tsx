@@ -11,6 +11,7 @@ import { MAX_POST_CONTENT } from "@/lib/constants";
 import { Textarea } from "./ui/textarea";
 import { toAbbr } from "@/lib/utils";
 import { useAuth } from "@/providers/auth.provider";
+import { UserAvatar } from "./user-avatar";
 
 export function NewPostForm() {
   const {
@@ -30,10 +31,7 @@ export function NewPostForm() {
       <Card className="">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 ">
-            <Avatar className="self-start">
-              <AvatarImage />
-              <AvatarFallback>{user && toAbbr(user.name)}</AvatarFallback>
-            </Avatar>
+            {user && <UserAvatar {...user} />}
             <Textarea
               placeholder="What is in your mind!?"
               className="min-h-0 h-auto !ring-0 overflow-hidden resize-none border-0 border-b-2 rounded-none p-2"
