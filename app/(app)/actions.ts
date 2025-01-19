@@ -69,3 +69,10 @@ export const likePost = serverActionWrapper({
     }
   },
 });
+
+export const getPost = serverActionWrapper({
+  schema: z.string(),
+  async callback(postId) {
+    return await prisma.post.findFirst({ where: { id: postId } });
+  },
+});
