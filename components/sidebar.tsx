@@ -2,16 +2,17 @@ import Link from "next/link";
 import {
   BookmarkIcon,
   Heart,
+  HomeIcon,
   LucideIcon,
   MessageCircle,
   Search,
   StickyNote,
   User2Icon,
   UserRoundCheck,
-  UsersIcon,
 } from "lucide-react";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { getUser } from "@/actions";
 
 type SidebarProps = {
   label: string;
@@ -42,7 +43,8 @@ function SidebarItem({
   );
 }
 
-export default function Sidebar({ className }: { className?: string }) {
+export default async function Sidebar({ className }: { className?: string }) {
+  const user = await getUser();
   return (
     <aside
       className={cn(
@@ -61,7 +63,12 @@ export default function Sidebar({ className }: { className?: string }) {
         <span>New Post</span>
       </Link>
       <hr className="my-4" />
-      <SidebarItem label="Your Profile" icon={User2Icon} href="/profile" />
+      <SidebarItem label="Home" icon={HomeIcon} href="/" />
+      <SidebarItem
+        label="Your Profile"
+        icon={User2Icon}
+        href={`/profile/${user!.username}`}
+      />
       <SidebarItem label="Search" icon={Search} href="/search" />
       <SidebarItem
         label="Saved Posts"

@@ -1,6 +1,7 @@
 import { formatTime } from "@/lib/utils";
 import { User } from "@/types";
 import { UserAvatar } from "./user-avatar";
+import Link from "next/link";
 
 type UserCardProps = {
   time?: Date;
@@ -9,7 +10,7 @@ type UserCardProps = {
 
 export default function UserCard({ user, time }: UserCardProps) {
   return (
-    <div className="flex gap-2">
+    <Link className="flex gap-2" href={`/profile/${user.username}`}>
       <UserAvatar {...user} />
       <div className="flex flex-col text-sm justify-center">
         <span>{user.name}</span>
@@ -20,6 +21,6 @@ export default function UserCard({ user, time }: UserCardProps) {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

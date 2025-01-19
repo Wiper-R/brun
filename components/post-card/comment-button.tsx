@@ -15,8 +15,13 @@ import { useForm } from "react-hook-form";
 import { MAX_POST_CONTENT } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postComment } from "@/actions";
+import { useAuth } from "@/providers/auth.provider";
+import { UserAvatar } from "../user-avatar";
 
 export function PostCommentButton({ post }: { post: PostWithAuthor }) {
+  const {
+    auth: { user },
+  } = useAuth();
   const form = useForm<PostCommentSchema>({
     resolver: zodResolver(PostCommentSchema),
     defaultValues: { content: "", postId: post.id },
@@ -28,7 +33,7 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="pointer-events-auto">
           <MessageCircle className="" />
           {post._count.comments > 0 && <span>{post._count.comments}</span>}
         </Button>
@@ -54,10 +59,7 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
               <div className="absolute top-0 -bottom-8 left-5 -z-10 border-l" />
             </div>
             <div className="flex gap-2 mt-8">
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback>{toAbbr(post.author.name)}</AvatarFallback>
-              </Avatar>
+              <UserAvatar {...user!} />
 
               <Textarea
                 placeholder="Post your reply"
@@ -74,7 +76,7 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
               />
             </div>
           </div>
-          <div className="flex justify-end items-center gap-4">
+          <div className="flex justify-end items-center gap-4 mt-4">
             <span className="text-sm text-gray-700">
               {form.watch("content").length}/{MAX_POST_CONTENT}
             </span>

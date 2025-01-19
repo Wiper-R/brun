@@ -1,6 +1,5 @@
 "use client";
 import { ImageIcon, SendHorizonal, SmileIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createPost } from "@/app/(app)/actions";
 import { MAX_POST_CONTENT } from "@/lib/constants";
 import { Textarea } from "./ui/textarea";
-import { toAbbr } from "@/lib/utils";
 import { useAuth } from "@/providers/auth.provider";
 import { UserAvatar } from "./user-avatar";
 
@@ -30,7 +28,7 @@ export function NewPostForm() {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="">
         <CardContent className="p-4">
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-start gap-2 ">
             {user && <UserAvatar {...user} />}
             <Textarea
               placeholder="What is in your mind!?"

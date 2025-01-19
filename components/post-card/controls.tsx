@@ -15,6 +15,7 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
         size="sm"
         onClick={async () => await likePost(post.id)}
         className={cn(
+          "pointer-events-auto",
           post.likes.length > 0 && "text-red-500 hover:text-red-500 ",
         )}
       >
@@ -28,11 +29,12 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
       <Button
         variant="outline"
         size="sm"
+        className="pointer-events-auto"
         onClick={async () => await savePost(post.id)}
       >
         <Bookmark className="" />
       </Button>
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="pointer-events-auto">
         <Share2 className="" />
       </Button>
     </div>
