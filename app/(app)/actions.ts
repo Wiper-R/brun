@@ -166,3 +166,23 @@ export const getFollowers = serverActionWrapper({
     return result.map((row) => row.follower);
   },
 });
+
+export const getUsers = serverActionWrapper({
+  schema: GetFollowersSchema,
+  async callback({ search }) {
+    let cond: Prisma.UserWhereInput = {};
+    if (search) {
+      cond = {
+        OR: [
+          { username: { contains: search, mode: "insensitive" } },
+          { name: { contains: search, mode: "insensitive" } },
+        ],
+      };
+    }
+    const result = await prisma.user.findMany({
+      where: { ...cond },
+    });
+
+    return result;
+  },
+});

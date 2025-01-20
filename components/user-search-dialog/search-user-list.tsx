@@ -1,20 +1,20 @@
 "use client";
 
-import { getFollowers } from "@/app/(app)/actions";
+import { getUsers } from "@/app/(app)/actions";
 import { useQuery } from "react-query";
 import { Input } from "../ui/input";
 import { useDebounceValue } from "usehooks-ts";
 import { UserList } from "../user-list";
 
-export function FollowersList() {
+export function SearchUserList() {
   const [search, setSearch] = useDebounceValue("", 200);
   const { data, isLoading } = useQuery({
     async queryFn() {
-      const result = await getFollowers({ search });
+      const result = await getUsers({ search });
       if (!result.success) throw new Error("Couldn't fetch followers");
       return result.data;
     },
-    queryKey: ["followers", search],
+    queryKey: ["users", search],
   });
 
   return (

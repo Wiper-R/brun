@@ -45,4 +45,7 @@ export type PostCommentSchema = z.infer<typeof PostCommentSchema>;
 export const GetFollowersSchema = z.object({ search: z.string().optional() });
 export type GetFollowersSchema = z.infer<typeof GetFollowersSchema>;
 
+export const SearchUsersSchema = z.object({ search: z.string().optional() });
+export type SearchUsersSchema = z.infer<typeof SearchUsersSchema>;
+
 export * from "./database";

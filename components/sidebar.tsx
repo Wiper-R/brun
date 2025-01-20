@@ -14,6 +14,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/actions";
 import { FollowersDialog } from "./followers-dialog";
+import { UserSearchDialog } from "./user-search-dialog";
 
 type SidebarProps = {
   label: string;
@@ -70,13 +71,19 @@ export default async function Sidebar({ className }: { className?: string }) {
         icon={User2Icon}
         href={`/profile/${user!.username}`}
       />
-      <SidebarItem label="Search" icon={Search} href="/search" />
+      <UserSearchDialog
+        Trigger={
+          <Button variant="ghost" className="justify-start">
+            {<Search className="!h-5 !w-5 " />}
+            <span>Search</span>
+          </Button>
+        }
+      />
       <SidebarItem
         label="Saved Posts"
         icon={BookmarkIcon}
         href="/?type=saved"
       />
-      {/* <SidebarItem label="Followers" icon={UserRoundCheck} href="/followers" /> */}
       <FollowersDialog
         Trigger={
           <Button variant="ghost" className="justify-start">
