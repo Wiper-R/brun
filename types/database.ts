@@ -9,8 +9,8 @@ export type PostWithAuthor = {
   author: User;
   _count: { comments: number };
   likes: { id: string }[];
+  savedPost: { id: string }[];
 } & Post;
-
 export type CommentWithAuthor = {
   author: User;
 } & Comment;

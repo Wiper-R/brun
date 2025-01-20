@@ -82,3 +82,21 @@ export const postComment = serverActionWrapper({
     return comment;
   },
 });
+
+export const follow = serverActionWrapper({
+  schema: z.string(),
+  async callback(username) {
+    const session = await getSessionData();
+    const followee = await prisma.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+    if (!followee) throw new ApiError({ status: 404, message: "Not found" });
+    if (followee.id == session.userId) {
+      throw new ApiError({ status: 400, message: "You can't follow yourself" });
+    }
+    await prisma.follow.create({
+      data: { followeeId: followee.id, followerId: session.userId! },
+    });
+  },
+});

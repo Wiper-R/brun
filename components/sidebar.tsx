@@ -10,9 +10,10 @@ import {
   User2Icon,
   UserRoundCheck,
 } from "lucide-react";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { getUser } from "@/actions";
+import { FollowersDialog } from "./followers-dialog";
 
 type SidebarProps = {
   label: string;
@@ -73,10 +74,18 @@ export default async function Sidebar({ className }: { className?: string }) {
       <SidebarItem
         label="Saved Posts"
         icon={BookmarkIcon}
-        href="/posts?saved"
+        href="/?type=saved"
       />
-      <SidebarItem label="Followers" icon={UserRoundCheck} href="/followers" />
-      <SidebarItem label="Liked Posts" icon={Heart} href="/posts?liked" />
+      {/* <SidebarItem label="Followers" icon={UserRoundCheck} href="/followers" /> */}
+      <FollowersDialog
+        Trigger={
+          <Button variant="ghost" className="justify-start">
+            {<UserRoundCheck className="!h-5 !w-5 " />}
+            <span>Followers</span>
+          </Button>
+        }
+      />
+      <SidebarItem label="Liked Posts" icon={Heart} href="/?type=liked" />
       <SidebarItem label="Comments" icon={MessageCircle} href="/comments" />
     </aside>
   );

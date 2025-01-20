@@ -5,11 +5,13 @@ import { ApiError, serverActionWrapper } from "@/lib/server-action-helper";
 import {
   CommentWithAuthor,
   CreatePostSchema,
-  GetFeedSchema,
+  GetFollowersSchema,
+  GetPostsSchema,
   PostWithAuthor,
 } from "@/types";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 
 export const createPost = serverActionWrapper({
   schema: CreatePostSchema,
@@ -22,24 +24,37 @@ export const createPost = serverActionWrapper({
   },
 });
 
-export const getFeed = serverActionWrapper({
-  schema: GetFeedSchema,
-  async callback() {
+export const getPosts = serverActionWrapper({
+  schema: GetPostsSchema,
+
+  async callback(input) {
     const session = await getSessionData();
+    let where: Prisma.PostWhereInput = {};
+    console.log("Input is", input.type);
+    if (input.type == "feed") {
+      where = {
+        author: {
+          OR: [
+            { followers: { some: { followerId: session.userId! } } },
+            { id: session.userId! },
+          ],
+        },
+      };
+    } else if (input.type == "saved") {
+      where = {
+        savedPost: { some: { userId: session.userId! } },
+      };
+    }
+
     const userFeed: PostWithAuthor[] = await prisma.post.findMany({
-      // where: {
-      // author: {
-      // followers: {
-      // some: { followerId: session.userId! },
-      //     },
-      //   },
-      // },
+      where,
       include: {
         author: {
           select: { name: true, avatarUrl: true, username: true },
         },
         _count: { select: { comments: true } },
         likes: { where: { userId: session.userId! }, select: { id: true } },
+        savedPost: { select: { id: true } },
       },
       orderBy: {
         createdAt: "desc",
@@ -74,14 +89,30 @@ export const getPost = serverActionWrapper({
   schema: z.string(),
   async callback(postId) {
     const session = await getSessionData();
-    return await prisma.post.findFirst({
+    const post: PostWithAuthor | null = await prisma.post.findFirst({
       where: { id: postId },
       include: {
         author: { select: { name: true, avatarUrl: true, username: true } },
         _count: { select: { comments: true } },
         likes: { where: { userId: session.userId! }, select: { id: true } },
+        savedPost: { select: { id: true } },
       },
     });
+    return post;
+  },
+});
+
+export const getProfile = serverActionWrapper({
+  schema: z.string(),
+  async callback(username) {
+    try {
+      return await prisma.user.findUnique({
+        where: { username },
+        include: { _count: { select: { followers: true, following: true } } },
+      });
+    } catch (e) {
+      throw new ApiError({ status: 404, message: "User not found" });
+    }
   },
 });
 
@@ -106,5 +137,32 @@ export const savePost = serverActionWrapper({
     await prisma.savedPost.create({
       data: { postId, userId: session.userId! },
     });
+  },
+});
+
+export const getFollowers = serverActionWrapper({
+  schema: GetFollowersSchema,
+  async callback({ search }) {
+    const session = await getSessionData();
+    let cond: Prisma.FollowWhereInput = {};
+    if (search) {
+      cond = {
+        follower: {
+          OR: [
+            { username: { contains: search, mode: "insensitive" } },
+            { name: { contains: search, mode: "insensitive" } },
+          ],
+        },
+      };
+    }
+    const result = await prisma.follow.findMany({
+      where: {
+        followeeId: session.userId,
+        ...cond,
+      },
+      include: { follower: true },
+    });
+
+    return result.map((row) => row.follower);
   },
 });

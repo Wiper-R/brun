@@ -29,10 +29,14 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
       <Button
         variant="outline"
         size="sm"
-        className="pointer-events-auto"
+        className={cn("pointer-events-auto")}
         onClick={async () => await savePost(post.id)}
       >
-        <Bookmark className="" />
+        <Bookmark
+          className={cn(
+            post.savedPost.length > 0 && "text-blue-500 fill-blue-500",
+          )}
+        />
       </Button>
       <Button variant="outline" size="sm" className="pointer-events-auto">
         <Share2 className="" />

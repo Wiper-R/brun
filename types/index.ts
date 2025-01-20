@@ -23,19 +23,26 @@ export type SessionData = {
 export const CreatePostSchema = z.object({
   content: z.string().max(MAX_POST_CONTENT),
 });
-
-export const GetPostsSchema = z.object({});
-export type GetPostsSchema = z.infer<typeof GetPostsSchema>;
-
 export type CreatePostSchema = z.infer<typeof CreatePostSchema>;
 
-export const GetFeedSchema = z.object({});
-export type GetFeedSchema = z.infer<typeof GetFeedSchema>;
+export const GetPostsType = z.enum(["feed", "saved", "liked"]).default("feed");
+export type GetPostsType = z.infer<typeof GetPostsType>;
+
+export const GetPostsSchema = z.object({
+  type: GetPostsType,
+});
+export type GetPostsSchema = z.infer<typeof GetPostsSchema>;
+
+export const GetPostSchema = z.object({});
+export type GetPostSchema = z.infer<typeof GetPostSchema>;
 
 export const PostCommentSchema = z.object({
   content: z.string(),
   postId: z.string(),
 });
 export type PostCommentSchema = z.infer<typeof PostCommentSchema>;
+
+export const GetFollowersSchema = z.object({ search: z.string().optional() });
+export type GetFollowersSchema = z.infer<typeof GetFollowersSchema>;
 
 export * from "./database";

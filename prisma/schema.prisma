@@ -20,7 +20,7 @@ model User {
   Comment   Comment[]
   followers Follow[]    @relation(name: "Followers")
   following Follow[]    @relation(name: "Following")
-  SavedPost SavedPost[]
+  savedPost SavedPost[]
 }
 
 model Post {
@@ -34,7 +34,7 @@ model Post {
   comments  Comment[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  SavedPost SavedPost[]
+  savedPost SavedPost[]
 }
 
 model Like {
@@ -59,13 +59,12 @@ model Comment {
 }
 
 model Follow {
+  id         String   @id @default(cuid())
   followeeId String
   followee   User     @relation(name: "Followers", fields: [followeeId], references: [id])
   followerId String
   follower   User     @relation(name: "Following", fields: [followerId], references: [id])
   createdAt  DateTime @default(now())
-
-  @@unique([followeeId, followerId])
 }
 
 model SavedPost {
