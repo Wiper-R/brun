@@ -16,5 +16,15 @@ export default function PostsContainer({ type }: { type: GetPostsType }) {
     queryKey: ["posts", "all", type],
   });
 
-  return data?.map((post) => <PostCard key={post.id} post={post} />);
+  return (
+    <div className="gap-4 grid">
+      {data && data.length > 0 ? (
+        data.map((post) => <PostCard key={post.id} post={post} />)
+      ) : (
+        <p className="text-sm text-center">
+          We Could not find any {type} posts.
+        </p>
+      )}
+    </div>
+  );
 }

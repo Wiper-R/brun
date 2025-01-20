@@ -79,11 +79,7 @@ export default async function Sidebar({ className }: { className?: string }) {
           </Button>
         }
       />
-      <SidebarItem
-        label="Saved Posts"
-        icon={BookmarkIcon}
-        href="/?type=saved"
-      />
+      <SidebarItem label="Saved Posts" icon={BookmarkIcon} href="/saved" />
       <FollowersDialog
         Trigger={
           <Button variant="ghost" className="justify-start">
@@ -92,7 +88,7 @@ export default async function Sidebar({ className }: { className?: string }) {
           </Button>
         }
       />
-      <SidebarItem label="Liked Posts" icon={Heart} href="/?type=liked" />
+      <SidebarItem label="Liked Posts" icon={Heart} href="/liked" />
       <SidebarItem label="Comments" icon={MessageCircle} href="/comments" />
     </aside>
   );

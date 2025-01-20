@@ -30,7 +30,6 @@ export const getPosts = serverActionWrapper({
   async callback(input) {
     const session = await getSessionData();
     let where: Prisma.PostWhereInput = {};
-    console.log("Input is", input.type);
     if (input.type == "feed") {
       where = {
         author: {
@@ -43,6 +42,10 @@ export const getPosts = serverActionWrapper({
     } else if (input.type == "saved") {
       where = {
         savedPost: { some: { userId: session.userId! } },
+      };
+    } else if (input.type == "liked") {
+      where = {
+        likes: { some: { userId: session.userId! } },
       };
     }
 
