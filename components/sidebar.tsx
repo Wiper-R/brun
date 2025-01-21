@@ -55,7 +55,7 @@ export default async function Sidebar({ className }: { className?: string }) {
       )}
     >
       <Link
-        href="/"
+        href="/#new-chat-input"
         className={cn(
           buttonVariants({ variant: "default" }),
           "rounded-full mt-2",

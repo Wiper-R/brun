@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/navbar";
 import { AuthProvider } from "@/providers/auth.provider";
 import QueryClientProvider from "@/providers/queryclient.provider";
+import AppLoadingState from "@/components/app-loading-state";
 
 export const metadata: Metadata = {
   title: "Brun",
@@ -26,13 +27,15 @@ export default function RootLayout({
       <body
         className={`${jost.variable} antialiased min-h-screen relative flex flex-col`}
       >
-        <AuthProvider>
-          <QueryClientProvider>
-            <Navbar />
-            {children}
-            <Toaster />
-          </QueryClientProvider>
-        </AuthProvider>
+        <QueryClientProvider>
+          <AuthProvider>
+            <AppLoadingState>
+              <Navbar />
+              {children}
+              <Toaster />
+            </AppLoadingState>
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

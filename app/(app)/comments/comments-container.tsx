@@ -20,14 +20,13 @@ export default function CommentsContainer() {
       return result.data;
     },
   });
-  if (state == "loading" || !user) return <Loader2 className="animate-spin" />;
   return (
     <div className="my-4">
       <div className="text-xl font-semibold">Your comments</div>
       <hr className="my-4" />
       {data && data.length > 0 ? (
         data.map((c) => (
-          <CommentPostReferenceCard comment={c} key={c.id} user={user} />
+          <CommentPostReferenceCard comment={c} key={c.id} user={user!} />
         ))
       ) : (
         <div>Your haven't comment on any post</div>

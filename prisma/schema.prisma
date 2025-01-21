@@ -65,6 +65,8 @@ model Follow {
   followerId String
   follower   User     @relation(name: "Following", fields: [followerId], references: [id])
   createdAt  DateTime @default(now())
+
+  @@unique([followerId, followeeId])
 }
 
 model SavedPost {

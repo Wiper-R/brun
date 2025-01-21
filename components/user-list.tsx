@@ -1,15 +1,54 @@
+"use client";
 import { User } from "@/types";
 import { Loader2 } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import UserCard from "./user-card";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import { unfollow } from "@/app/(app)/actions";
+import { follow } from "@/actions";
+import { useQueryClient } from "react-query";
+
+type UserWithFollowing = {
+  isFollowing: boolean;
+} & User;
+
+function ActionButton({
+  username,
+  following,
+}: {
+  username: string;
+  following: boolean;
+}) {
+  const queryClient = useQueryClient();
+  async function handleAction() {
+    if (following) {
+      await unfollow(username);
+    } else {
+      await follow(username);
+    }
+    await Promise.all([
+      queryClient.invalidateQueries(["users"]),
+      queryClient.invalidateQueries(["me", "followers"]),
+    ]);
+  }
+  return (
+    <Button
+      variant={following ? "secondary" : "default"}
+      size="sm"
+      onClick={handleAction}
+    >
+      {following ? "Unfollow" : "Follow"}
+    </Button>
+  );
+}
 
 export function UserList({
   isLoading,
   data,
 }: {
   isLoading: boolean;
-  data?: User[];
+  data?: UserWithFollowing[];
 }) {
   return isLoading ? (
     <div className="flex justify-center">
@@ -24,9 +63,10 @@ export function UserList({
             className="p-1 flex justify-between items-center"
           >
             <UserCard user={user!} />
-            <Button variant="secondary" size="sm">
-              Unfollow
-            </Button>
+            <ActionButton
+              username={user.username}
+              following={user.isFollowing}
+            />
           </div>
         ))}
       </div>

@@ -6,23 +6,34 @@ import { PostWithAuthor } from "@/types";
 import { cn } from "@/lib/utils";
 import { Bookmark, Heart, Share2 } from "lucide-react";
 import { PostCommentButton } from "./comment-button";
-
+import { useState } from "react";
 export default function Controls({ post }: { post: PostWithAuthor }) {
+  const [hasLiked, setHasLiked] = useState(post.likes.length > 0);
+  const [likeCount, setLikeCount] = useState(post.numLikes);
+  async function handleLike() {
+    if (hasLiked) return;
+    setHasLiked(true);
+    setLikeCount((c) => c + 1);
+    const res = await likePost(post.id);
+    if (!res.success) {
+      setHasLiked(false);
+      setLikeCount((c) => c - 1);
+    }
+  }
+
   return (
     <div className="flex gap-2">
       <Button
         variant="outline"
         size="sm"
-        onClick={async () => await likePost(post.id)}
+        onClick={handleLike}
         className={cn(
           "pointer-events-auto",
-          post.likes.length > 0 && "text-red-500 hover:text-red-500 ",
+          hasLiked && "text-red-500 hover:text-red-500 ",
         )}
       >
-        <Heart
-          className={cn(post.likes.length > 0 && "text-red-500 fill-red-500")}
-        />
-        {post.numLikes > 0 && <span>{post.numLikes}</span>}
+        <Heart className={cn(hasLiked && "text-red-500 fill-red-500")} />
+        {likeCount > 0 && <span>{likeCount}</span>}
       </Button>
       <PostCommentButton post={post} />
       <div className="flex-grow" />

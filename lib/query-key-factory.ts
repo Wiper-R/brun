@@ -11,7 +11,7 @@ const $ = {
     comments: () => createQueryKey("me", "comments"),
     followers: (query: string) => createQueryKey("me", "followers", query),
   },
-  user: {
+  users: {
     all: (username: string) => createQueryKey("users", username),
     search: (query: string) => createQueryKey("users", "search", query),
     comments: (username: string) =>

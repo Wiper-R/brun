@@ -17,14 +17,14 @@ function PostsView({ username }: { username: string }) {
 
       return result.data;
     },
-    queryKey: $.user.posts(username),
+    queryKey: $.users.posts(username),
   });
   return (
     <div className="space-y-6">
       {data && data.length > 0 ? (
         data.map((post) => <PostCard post={post} key={post.id} />)
       ) : (
-        <></>
+        <p className="text-gray-800 mt-4 text-sm">This user hasn't posted</p>
       )}
     </div>
   );
@@ -39,7 +39,7 @@ function CommentsView({ username }: { username: string }) {
 
       return result.data;
     },
-    queryKey: $.user.comments(username),
+    queryKey: $.users.comments(username),
   });
 
   const { data: user } = useQuery({
@@ -58,7 +58,9 @@ function CommentsView({ username }: { username: string }) {
           <CommentPostReferenceCard comment={post} user={user} key={post.id} />
         ))
       ) : (
-        <></>
+        <p className="text-gray-800 mt-4 text-sm">
+          This user hasn't posted any comments
+        </p>
       )}
     </div>
   );

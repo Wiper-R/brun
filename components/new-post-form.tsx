@@ -10,6 +10,9 @@ import { MAX_POST_CONTENT } from "@/lib/constants";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@/providers/auth.provider";
 import { UserAvatar } from "./user-avatar";
+import { useQueryClient } from "react-query";
+import queryKeyFactory from "@/lib/query-key-factory";
+import { useRef } from "react";
 
 export function NewPostForm() {
   const {
@@ -19,10 +22,18 @@ export function NewPostForm() {
     defaultValues: { content: "" },
     resolver: zodResolver(CreatePostSchema),
   });
+  const queryClient = useQueryClient();
   async function onSubmit(values: CreatePostSchema) {
     form.reset();
-    const post = await createPost(values);
-    console.log(post);
+    updateTextareaHeight();
+    await createPost(values);
+    await queryClient.invalidateQueries(queryKeyFactory.me.posts("feed"));
+  }
+  const textareaRef = useRef<HTMLTextAreaElement>(null!);
+  function updateTextareaHeight() {
+    const target = textareaRef.current;
+    target.style.height = `auto`;
+    target.style.height = `${target.scrollHeight}px`;
   }
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -37,12 +48,19 @@ export function NewPostForm() {
               rows={1}
               maxLength={MAX_POST_CONTENT}
               {...form.register("content", {
-                onChange: function (e) {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = `auto`;
-                  target.style.height = `${target.scrollHeight}px`;
-                },
+                onChange: updateTextareaHeight,
               })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  form.handleSubmit(onSubmit)();
+                }
+              }}
+              ref={(e) => {
+                const el = e as HTMLTextAreaElement;
+                form.register("content").ref(el);
+                textareaRef.current = el;
+              }}
             />
           </div>
         </CardContent>

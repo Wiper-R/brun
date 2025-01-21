@@ -178,14 +178,30 @@ export const getFollowers = serverActionWrapper({
       },
       include: { follower: true },
     });
+    const followersWithStatus = await Promise.all(
+      result.map(async (row) => {
+        const isFollowing = await prisma.follow.findFirst({
+          where: {
+            followeeId: row.followerId,
+            followerId: session.userId,
+          },
+        });
 
-    return result.map((row) => row.follower);
+        return {
+          ...row.follower,
+          isFollowing: Boolean(isFollowing),
+        };
+      }),
+    );
+
+    return followersWithStatus;
   },
 });
 
 export const getUsers = serverActionWrapper({
   schema: GetFollowersSchema,
   async callback({ search }) {
+    const session = await getSessionData();
     let cond: Prisma.UserWhereInput = {};
     if (search) {
       cond = {
@@ -196,10 +212,25 @@ export const getUsers = serverActionWrapper({
       };
     }
     const result = await prisma.user.findMany({
-      where: { ...cond },
+      where: { ...cond, NOT: { id: session.userId! } },
     });
+    const userWithFollowing = await Promise.all(
+      result.map(async (row) => {
+        const isFollowing = await prisma.follow.findFirst({
+          where: {
+            followeeId: row.id,
+            followerId: session.userId,
+          },
+        });
 
-    return result;
+        return {
+          ...row,
+          isFollowing: Boolean(isFollowing),
+        };
+      }),
+    );
+
+    return userWithFollowing;
   },
 });
 
@@ -233,5 +264,16 @@ export const getComments = serverActionWrapper({
     });
 
     return result;
+  },
+});
+
+export const unfollow = serverActionWrapper({
+  schema: z.string(),
+  async callback(username) {
+    const session = await getSessionData();
+    const result = await prisma.follow.deleteMany({
+      where: { followerId: session.userId!, followee: { username } },
+    });
+    console.log(result);
   },
 });

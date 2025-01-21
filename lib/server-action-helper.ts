@@ -36,7 +36,6 @@ export const serverActionWrapper = <T extends ZodSchema, R>({
         message = e.message;
         status = e.status;
       } else {
-        console.error(e);
         status = 500;
       }
       return { success: false, message: message, status };

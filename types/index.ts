@@ -21,7 +21,7 @@ export type SessionData = {
 };
 
 export const CreatePostSchema = z.object({
-  content: z.string().max(MAX_POST_CONTENT),
+  content: z.string().min(1).max(MAX_POST_CONTENT),
 });
 export type CreatePostSchema = z.infer<typeof CreatePostSchema>;
 
