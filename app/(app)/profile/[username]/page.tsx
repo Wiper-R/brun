@@ -3,6 +3,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { getProfile } from "../../actions";
 import { notFound } from "next/navigation";
 import FollowButton from "./follow-button";
+import ProfileTabs from "./profile-tabs";
 
 export default async function Page({
   params,
@@ -45,6 +46,7 @@ export default async function Page({
         </div>
       </div>
       <hr />
+      <ProfileTabs username={username} />
     </div>
   );
 }

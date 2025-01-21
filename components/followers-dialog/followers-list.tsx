@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { Input } from "../ui/input";
 import { useDebounceValue } from "usehooks-ts";
 import { UserList } from "../user-list";
+import queryKeyFactory from "@/lib/query-key-factory";
 
 export function FollowersList() {
   const [search, setSearch] = useDebounceValue("", 200);
@@ -14,7 +15,7 @@ export function FollowersList() {
       if (!result.success) throw new Error("Couldn't fetch followers");
       return result.data;
     },
-    queryKey: ["followers", search],
+    queryKey: queryKeyFactory.me.followers(search),
   });
 
   return (

@@ -1,18 +1,19 @@
 "use client";
 
 import { useQuery } from "react-query";
-import { getComments } from "../../actions";
+import { getPostComments } from "../../actions";
 import { CommentCard } from "@/components/comment";
+import queryKeyFactory from "@/lib/query-key-factory";
 
 export default function CommentContainer({ postId }: { postId: string }) {
   const comments = useQuery({
     async queryFn() {
-      const result = await getComments(postId);
+      const result = await getPostComments(postId);
       if (!result.success) return null;
       return result.data;
     },
 
-    queryKey: ["posts", postId, "comments"],
+    queryKey: queryKeyFactory.posts.comments(postId),
   });
   return (
     <div className="flex my-4 flex-col">

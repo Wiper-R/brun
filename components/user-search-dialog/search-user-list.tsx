@@ -14,7 +14,6 @@ export function SearchUserList() {
       if (!result.success) throw new Error("Couldn't fetch followers");
       return result.data;
     },
-    queryKey: ["users", search],
   });
 
   return (

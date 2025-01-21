@@ -11,7 +11,7 @@ export default async function Page({
   const type = await GetPostsType.parseAsync(_type);
   return (
     <div className="flex flex-col py-2 gap-4">
-      <NewPostForm />
+      {type == "feed" && <NewPostForm />}
       <PostsContainer type={type} />
     </div>
   );

@@ -5,8 +5,10 @@ import { ApiError, serverActionWrapper } from "@/lib/server-action-helper";
 import {
   CommentWithAuthor,
   CreatePostSchema,
+  GetCommentsSchema,
   GetFollowersSchema,
   GetPostsSchema,
+  GetUserPostsSchema,
   PostWithAuthor,
 } from "@/types";
 import { prisma } from "@/lib/prisma";
@@ -21,6 +23,32 @@ export const createPost = serverActionWrapper({
       data: { authorId: session.userId!, content: input.content },
     });
     return post;
+  },
+});
+
+async function _getPosts(where: Prisma.PostWhereInput) {
+  const session = await getSessionData();
+  const posts: PostWithAuthor[] = await prisma.post.findMany({
+    where,
+    include: {
+      author: {
+        select: { name: true, avatarUrl: true, username: true },
+      },
+      _count: { select: { comments: true } },
+      likes: { where: { userId: session.userId! }, select: { id: true } },
+      savedPost: { select: { id: true } },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return posts;
+}
+
+export const getUserPosts = serverActionWrapper({
+  schema: GetUserPostsSchema,
+  async callback(username) {
+    return await _getPosts({ author: { username } });
   },
 });
 
@@ -48,22 +76,7 @@ export const getPosts = serverActionWrapper({
         likes: { some: { userId: session.userId! } },
       };
     }
-
-    const userFeed: PostWithAuthor[] = await prisma.post.findMany({
-      where,
-      include: {
-        author: {
-          select: { name: true, avatarUrl: true, username: true },
-        },
-        _count: { select: { comments: true } },
-        likes: { where: { userId: session.userId! }, select: { id: true } },
-        savedPost: { select: { id: true } },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return userFeed;
+    return await _getPosts(where);
   },
 });
 
@@ -119,7 +132,7 @@ export const getProfile = serverActionWrapper({
   },
 });
 
-export const getComments = serverActionWrapper({
+export const getPostComments = serverActionWrapper({
   schema: z.string(),
   async callback(postId) {
     const comments: CommentWithAuthor[] = await prisma.comment.findMany({
@@ -184,6 +197,39 @@ export const getUsers = serverActionWrapper({
     }
     const result = await prisma.user.findMany({
       where: { ...cond },
+    });
+
+    return result;
+  },
+});
+
+export const getComments = serverActionWrapper({
+  schema: GetCommentsSchema,
+  async callback({ username }) {
+    let cond: Prisma.CommentWhereInput = {};
+    const session = await getSessionData();
+    if (username) {
+      cond = { author: { username } };
+    } else {
+      cond = { authorId: session.userId! };
+    }
+
+    const result = await prisma.comment.findMany({
+      where: cond,
+      orderBy: { createdAt: "desc" },
+      select: {
+        content: true,
+        createdAt: true,
+        id: true,
+        authorId: true,
+        post: {
+          select: {
+            id: true,
+            author: { select: { avatarUrl: true, username: true, name: true } },
+            content: true,
+          },
+        },
+      },
     });
 
     return result;

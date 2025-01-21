@@ -33,6 +33,10 @@ export const GetPostsSchema = z.object({
 });
 export type GetPostsSchema = z.infer<typeof GetPostsSchema>;
 
+export const GetUserPostsSchema = z.string();
+
+export type GetUserPostsSchema = z.infer<typeof GetUserPostsSchema>;
+
 export const GetPostSchema = z.object({});
 export type GetPostSchema = z.infer<typeof GetPostSchema>;
 
@@ -47,5 +51,10 @@ export type GetFollowersSchema = z.infer<typeof GetFollowersSchema>;
 
 export const SearchUsersSchema = z.object({ search: z.string().optional() });
 export type SearchUsersSchema = z.infer<typeof SearchUsersSchema>;
+
+export const GetCommentsSchema = z.object({
+  username: z.string().nullable().default(null),
+});
+export type GetCommentsSchema = z.infer<typeof GetCommentsSchema>;
 
 export * from "./database";
