@@ -31,6 +31,7 @@ export function NewPostForm() {
           <div className="flex items-start gap-2 ">
             {user && <UserAvatar {...user} />}
             <Textarea
+              id="new-chat-input"
               placeholder="What is in your mind!?"
               className="min-h-0 h-auto !ring-0 overflow-hidden resize-none border-0 border-b-2 rounded-none p-2"
               rows={1}
