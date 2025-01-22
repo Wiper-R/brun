@@ -21,6 +21,7 @@ const $ = {
   posts: {
     all: () => createQueryKey("posts"),
     comments: (id: string) => createQueryKey("posts", id, "comments"),
+    top: () => createQueryKey("posts", "top"),
   },
 };
 

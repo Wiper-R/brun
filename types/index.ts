@@ -57,4 +57,10 @@ export const GetCommentsSchema = z.object({
 });
 export type GetCommentsSchema = z.infer<typeof GetCommentsSchema>;
 
+export const UpdateUserSchema = z.object({
+  name: z.string().optional(),
+  username: z.string().optional(),
+});
+export type UpdateUserSchema = z.infer<typeof UpdateUserSchema>;
+
 export * from "./database";

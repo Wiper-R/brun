@@ -56,7 +56,7 @@ export function UserList({
   ) : data && data.length > 0 ? (
     <ScrollArea className="flex max-h-60 flex-col gap-2">
       <div className="pr-4">
-        {data?.map((user) => (
+        {data.map((user) => (
           <div
             key={user.username}
             className="p-1 flex justify-between items-center"

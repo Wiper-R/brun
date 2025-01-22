@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { AuthProvider } from "@/providers/auth.provider";
 import QueryClientProvider from "@/providers/queryclient.provider";
 import AppLoadingState from "@/components/app-loading-state";
+import SidebarToggleProvider from "@/providers/sidebar-toggle.provider";
 
 export const metadata: Metadata = {
   title: "Brun",
@@ -30,9 +31,11 @@ export default function RootLayout({
         <QueryClientProvider>
           <AuthProvider>
             <AppLoadingState>
-              <Navbar />
-              {children}
-              <Toaster />
+              <SidebarToggleProvider>
+                <Navbar />
+                {children}
+                <Toaster />
+              </SidebarToggleProvider>
             </AppLoadingState>
           </AuthProvider>
         </QueryClientProvider>

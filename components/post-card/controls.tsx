@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Bookmark, Heart, Share2 } from "lucide-react";
 import { PostCommentButton } from "./comment-button";
 import { useState } from "react";
+import { toast } from "sonner";
 export default function Controls({ post }: { post: PostWithAuthor }) {
   const [hasLiked, setHasLiked] = useState(post.likes.length > 0);
   const [likeCount, setLikeCount] = useState(post.numLikes);
@@ -18,6 +19,15 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
     if (!res.success) {
       setHasLiked(false);
       setLikeCount((c) => c - 1);
+    }
+  }
+
+  async function handleSavePost() {
+    const res = await savePost(post.id);
+    if (res.success) {
+      toast.success("Saved posted successfully");
+    } else {
+      toast.error(res.message);
     }
   }
 
@@ -41,7 +51,7 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
         variant="outline"
         size="sm"
         className={cn("pointer-events-auto")}
-        onClick={async () => await savePost(post.id)}
+        onClick={handleSavePost}
       >
         <Bookmark
           className={cn(

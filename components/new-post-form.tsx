@@ -12,7 +12,8 @@ import { useAuth } from "@/providers/auth.provider";
 import { UserAvatar } from "./user-avatar";
 import { useQueryClient } from "react-query";
 import queryKeyFactory from "@/lib/query-key-factory";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function NewPostForm() {
   const {
@@ -35,9 +36,12 @@ export function NewPostForm() {
     target.style.height = `auto`;
     target.style.height = `${target.scrollHeight}px`;
   }
+
+  const [isEmojiOpen, setEmojiOpen] = useState(false);
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Card className="">
+      <Card className="relative">
         <CardContent className="p-4">
           <div className="flex items-start gap-2 ">
             {user && <UserAvatar {...user} />}
@@ -65,10 +69,23 @@ export function NewPostForm() {
           </div>
         </CardContent>
         <CardFooter className="flex px-4 gap-2">
-          <Button variant="outline" size="icon" type="submit">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() =>
+              toast.error("This feature is not currently available")
+            }
+          >
             <ImageIcon />
           </Button>
-          <Button variant="outline" size="icon" type="submit">
+          <Button
+            variant="outline"
+            size="icon"
+            className="relative"
+            onClick={() =>
+              toast.error("This feature is not currently available")
+            }
+          >
             <SmileIcon />
           </Button>
           <div className="flex-grow" />

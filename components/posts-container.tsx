@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import SadBot from "@/public/sad-bot.png";
 import Image from "next/image";
 import Link from "next/link";
-import $ from "@/lib/query-key-factory";
+import queryKeyFactory from "@/lib/query-key-factory";
 
 function NoResultMessage({ type }: { type: GetPostsType }) {
   return (
@@ -41,7 +41,7 @@ export default function PostsContainer({ type }: { type: GetPostsType }) {
       }
       return data.data;
     },
-    queryKey: $.me.posts(type),
+    queryKey: queryKeyFactory.me.posts(type),
   });
 
   return (

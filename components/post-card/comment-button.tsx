@@ -17,6 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postComment } from "@/actions";
 import { useAuth } from "@/providers/auth.provider";
 import { UserAvatar } from "../user-avatar";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export function PostCommentButton({ post }: { post: PostWithAuthor }) {
   const {
@@ -27,11 +29,17 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
     defaultValues: { content: "", postId: post.id },
   });
   async function onSubmit(values: PostCommentSchema) {
-    const comment = await postComment(values);
-    console.log(comment);
+    const res = await postComment(values);
+    if (res.success) {
+      setIsOpen(false);
+      toast.success("Posted comment successfully");
+    } else {
+      toast.error(res.message);
+    }
   }
+  const [open, setIsOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(v) => setIsOpen(v)}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="pointer-events-auto">
           <MessageCircle className="" />
@@ -73,6 +81,12 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
                     target.style.height = `${target.scrollHeight}px`;
                   },
                 })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    form.handleSubmit(onSubmit)();
+                  }
+                }}
               />
             </div>
           </div>
@@ -80,7 +94,7 @@ export function PostCommentButton({ post }: { post: PostWithAuthor }) {
             <span className="text-sm text-gray-700">
               {form.watch("content").length}/{MAX_POST_CONTENT}
             </span>
-            <Button>Post</Button>
+            <Button type="submit">Post</Button>
           </div>
         </form>
       </DialogContent>

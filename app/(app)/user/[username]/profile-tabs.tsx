@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { getComments, getProfile, getUserPosts } from "../../actions";
 import { PostCard } from "@/components/post-card";
 import { CommentPostReferenceCard } from "@/components/comment-post-reference-card";
-import $ from "@/lib/query-key-factory";
+import queryKeyFactory from "@/lib/query-key-factory";
 
 function PostsView({ username }: { username: string }) {
   const { data } = useQuery({
@@ -17,7 +17,7 @@ function PostsView({ username }: { username: string }) {
 
       return result.data;
     },
-    queryKey: $.users.posts(username),
+    queryKey: queryKeyFactory.users.posts(username),
   });
   return (
     <div className="space-y-6">
@@ -39,7 +39,7 @@ function CommentsView({ username }: { username: string }) {
 
       return result.data;
     },
-    queryKey: $.users.comments(username),
+    queryKey: queryKeyFactory.users.comments(username),
   });
 
   const { data: user } = useQuery({
@@ -50,6 +50,7 @@ function CommentsView({ username }: { username: string }) {
       }
       return result.data;
     },
+    queryKey: queryKeyFactory.users.all(username),
   });
   return (
     <div className="space-y-6">

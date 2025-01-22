@@ -3,12 +3,12 @@
 import { useQuery } from "react-query";
 import { getComments } from "../actions";
 import { useAuth } from "@/providers/auth.provider";
-import { Loader2 } from "lucide-react";
 import { CommentPostReferenceCard } from "@/components/comment-post-reference-card";
+import queryKeyFactory from "@/lib/query-key-factory";
 
 export default function CommentsContainer() {
   const {
-    auth: { user, state },
+    auth: { user },
   } = useAuth();
   const { data } = useQuery({
     async queryFn() {
@@ -19,6 +19,7 @@ export default function CommentsContainer() {
 
       return result.data;
     },
+    queryKey: queryKeyFactory.me.comments(),
   });
   return (
     <div className="my-4">

@@ -10,6 +10,7 @@ import {
   GetPostsSchema,
   GetUserPostsSchema,
   PostWithAuthor,
+  UpdateUserSchema,
 } from "@/types";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
@@ -280,9 +281,32 @@ export const unfollow = serverActionWrapper({
   schema: z.string(),
   async callback(username) {
     const session = await getSessionData();
-    const result = await prisma.follow.deleteMany({
+    await prisma.follow.deleteMany({
       where: { followerId: session.userId!, followee: { username } },
     });
-    console.log(result);
+  },
+});
+
+export const getTopPosts = serverActionWrapper({
+  schema: z.void(),
+  async callback() {
+    return await prisma.post.findMany({
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        author: { select: { username: true, avatarUrl: true, name: true } },
+      },
+      orderBy: [{ numLikes: "desc" }, { createdAt: "desc" }],
+      take: 2,
+    });
+  },
+});
+
+export const updateUser = serverActionWrapper({
+  schema: UpdateUserSchema,
+  async callback(data) {
+    const { userId } = await getSessionData();
+    await prisma.user.update({ where: { id: userId }, data });
   },
 });
