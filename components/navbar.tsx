@@ -1,6 +1,6 @@
 import Logo from "./logo";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import { getUser } from "@/actions";
 import { UserAvatar } from "./user-avatar";
 import Link from "next/link";
