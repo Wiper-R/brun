@@ -160,9 +160,16 @@ export const savePost = serverActionWrapper({
   schema: z.string(),
   async callback(postId) {
     const session = await getSessionData();
-    await prisma.savedPost.create({
-      data: { postId, userId: session.userId! },
-    });
+    try {
+      await prisma.savedPost.create({
+        data: { postId, userId: session.userId! },
+      });
+    } catch (e) {
+      throw new ApiError({
+        message: "This post is already saved",
+        status: 400,
+      });
+    }
   },
 });
 

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,6 +12,7 @@ import { useAuth } from "@/providers/auth.provider";
 import { UpdateUserSchema } from "@/types";
 import { useForm } from "react-hook-form";
 import { updateUser } from "../actions";
+import Link from "next/link";
 
 export default function UserSettingss() {
   const {

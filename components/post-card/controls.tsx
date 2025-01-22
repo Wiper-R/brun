@@ -11,6 +11,7 @@ import { toast } from "sonner";
 export default function Controls({ post }: { post: PostWithAuthor }) {
   const [hasLiked, setHasLiked] = useState(post.likes.length > 0);
   const [likeCount, setLikeCount] = useState(post.numLikes);
+  const [isSaved, setIsSaved] = useState(post.savedPost.length > 0);
   async function handleLike() {
     if (hasLiked) return;
     setHasLiked(true);
@@ -23,11 +24,24 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
   }
 
   async function handleSavePost() {
+    const orig = isSaved;
+    setIsSaved(true);
     const res = await savePost(post.id);
     if (res.success) {
       toast.success("Saved posted successfully");
     } else {
+      setIsSaved(orig);
       toast.error(res.message);
+    }
+  }
+
+  async function handleShare() {
+    const url = new URL(`/posts/${post.id}`, window.location.href).toString();
+    if (navigator.share && navigator.canShare({ url })) {
+      await navigator.share({ url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast.success("Url copied to clipboard");
     }
   }
 
@@ -53,13 +67,14 @@ export default function Controls({ post }: { post: PostWithAuthor }) {
         className={cn("pointer-events-auto")}
         onClick={handleSavePost}
       >
-        <Bookmark
-          className={cn(
-            post.savedPost.length > 0 && "text-blue-500 fill-blue-500",
-          )}
-        />
+        <Bookmark className={cn(isSaved && "text-blue-500 fill-blue-500")} />
       </Button>
-      <Button variant="outline" size="sm" className="pointer-events-auto">
+      <Button
+        variant="outline"
+        size="sm"
+        className="pointer-events-auto"
+        onClick={handleShare}
+      >
         <Share2 className="" />
       </Button>
     </div>
