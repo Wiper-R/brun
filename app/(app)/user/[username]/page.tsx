@@ -30,7 +30,10 @@ export default async function Page({
               </span>
             </div>
             {user.username != profile.username && (
-              <FollowButton username={profile.username} />
+              <FollowButton
+                username={profile.username}
+                following={profile.isFollowing}
+              />
             )}
           </div>
           <div className="mt-2 flex items-center gap-4">

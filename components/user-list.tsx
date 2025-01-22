@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import UserCard from "./user-card";
 import { Button } from "./ui/button";
-import { useState } from "react";
 import { unfollow } from "@/app/(app)/actions";
 import { follow } from "@/actions";
 import { useQueryClient } from "react-query";

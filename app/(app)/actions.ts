@@ -121,11 +121,20 @@ export const getPost = serverActionWrapper({
 export const getProfile = serverActionWrapper({
   schema: z.string(),
   async callback(username) {
+    const { userId } = await getSessionData();
     try {
-      return await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { username },
         include: { _count: { select: { followers: true, following: true } } },
       });
+      if (!user) {
+        throw new ApiError({ status: 404, message: "User not found" });
+      }
+      const following = await prisma.follow.findFirst({
+        where: { followeeId: user.id, followerId: userId },
+      });
+
+      return { ...user, isFollowing: Boolean(following) };
     } catch (e) {
       throw new ApiError({ status: 404, message: "User not found" });
     }

@@ -50,7 +50,7 @@ export default async function Sidebar({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        "flex w-full flex-col flex-grow  h-full max-w-[240px] border-r border-border p-2 sticky top-0 bg-white",
+        "flex w-full flex-col flex-grow  h-full max-w-[240px] border-r border-border p-2 sticky top-0 bg-white overflow-auto",
         className,
       )}
     >
@@ -69,7 +69,7 @@ export default async function Sidebar({ className }: { className?: string }) {
       <SidebarItem
         label="Your Profile"
         icon={User2Icon}
-        href={`/profile/${user!.username}`}
+        href={`/user/${user!.username}`}
       />
       <UserSearchDialog
         Trigger={
@@ -94,6 +94,9 @@ export default async function Sidebar({ className }: { className?: string }) {
       />
       <SidebarItem label="Liked Posts" icon={Heart} href="/?type=liked" />
       <SidebarItem label="Comments" icon={MessageCircle} href="/comments" />
+      <div className="flex-grow" />
+      <hr className="my-2" />
+      <SidebarItem label="Settings" icon={MessageCircle} href="/settings" />
     </aside>
   );
 }

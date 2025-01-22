@@ -10,7 +10,7 @@ type UserCardProps = {
 
 export default function UserCard({ user, time }: UserCardProps) {
   return (
-    <Link className="flex gap-2" href={`/profile/${user.username}`}>
+    <Link className="flex gap-2" href={`/user/${user.username}`}>
       <UserAvatar {...user} />
       <div className="flex flex-col text-sm justify-center">
         <span>{user.name}</span>
