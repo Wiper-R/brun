@@ -12,7 +12,7 @@ import { useAuth } from "@/providers/auth.provider";
 import { UserAvatar } from "./user-avatar";
 import { useQueryClient } from "react-query";
 import queryKeyFactory from "@/lib/query-key-factory";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 export function NewPostForm() {
@@ -36,8 +36,6 @@ export function NewPostForm() {
     target.style.height = `auto`;
     target.style.height = `${target.scrollHeight}px`;
   }
-
-  const [isEmojiOpen, setEmojiOpen] = useState(false);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>

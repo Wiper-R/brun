@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <MaxWidthWrapper className="flex-col flex-grow flex items-center justify-center text-sm gap-0">
-      <span>The page you are looking for doesn't exists.</span>
+      <span>{"The page you are looking for doesn't exists."}</span>
       <span>
         <Link
           href="/"

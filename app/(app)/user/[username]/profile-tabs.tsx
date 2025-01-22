@@ -24,7 +24,9 @@ function PostsView({ username }: { username: string }) {
       {data && data.length > 0 ? (
         data.map((post) => <PostCard post={post} key={post.id} />)
       ) : (
-        <p className="text-gray-800 mt-4 text-sm">This user hasn't posted</p>
+        <p className="text-gray-800 mt-4 text-sm">
+          {"This user hasn't posted"}
+        </p>
       )}
     </div>
   );
@@ -60,7 +62,7 @@ function CommentsView({ username }: { username: string }) {
         ))
       ) : (
         <p className="text-gray-800 mt-4 text-sm">
-          This user hasn't posted any comments
+          {"This user hasn't posted any comments"}
         </p>
       )}
     </div>

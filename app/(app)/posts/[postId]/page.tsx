@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getPost } from "../../actions";
 import { notFound } from "next/navigation";
 import PostPage from "./post-page";

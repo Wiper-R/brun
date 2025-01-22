@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { getUser, signin, signup } from "../../../actions";
+import { signup } from "../../../actions";
 import { SignupSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

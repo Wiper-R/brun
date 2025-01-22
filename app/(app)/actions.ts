@@ -93,7 +93,7 @@ export const likePost = serverActionWrapper({
           numLikes: { increment: 1 },
         },
       });
-    } catch (e) {
+    } catch {
       throw new ApiError({
         status: 400,
         message: "You have already liked this post",
@@ -136,7 +136,7 @@ export const getProfile = serverActionWrapper({
       });
 
       return { ...user, isFollowing: Boolean(following) };
-    } catch (e) {
+    } catch {
       throw new ApiError({ status: 404, message: "User not found" });
     }
   },
@@ -164,7 +164,7 @@ export const savePost = serverActionWrapper({
       await prisma.savedPost.create({
         data: { postId, userId: session.userId! },
       });
-    } catch (e) {
+    } catch {
       throw new ApiError({
         message: "This post is already saved",
         status: 400,

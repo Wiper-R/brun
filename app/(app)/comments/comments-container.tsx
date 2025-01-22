@@ -30,7 +30,7 @@ export default function CommentsContainer() {
           <CommentPostReferenceCard comment={c} key={c.id} user={user!} />
         ))
       ) : (
-        <div>Your haven't comment on any post</div>
+        <div>{"Your haven't comment on any post"}</div>
       )}
     </div>
   );

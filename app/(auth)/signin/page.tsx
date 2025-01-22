@@ -1,12 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -73,7 +67,7 @@ export default function Page() {
               />
               <Button type="submit">Signin</Button>
               <div className="text-xs ml-auto">
-                Don't have an account? <Link href="/signup">Create</Link>
+                {"Don't have an account?"} <Link href="/signup">Create</Link>
               </div>
             </form>
           </Form>
