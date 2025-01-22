@@ -1,6 +1,6 @@
 import Logo from "./logo";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { getUser } from "@/actions";
 import { UserAvatar } from "./user-avatar";
 import Link from "next/link";
@@ -22,8 +22,18 @@ export async function Navbar() {
             <UserAvatar {...user} />
           ) : (
             <>
-              <Button variant="ghost">Signup</Button>
-              <Button variant="ghost">Login</Button>
+              <Link
+                className={buttonVariants({ variant: "ghost" })}
+                href="/signup"
+              >
+                Signup
+              </Link>
+              <Link
+                className={buttonVariants({ variant: "ghost" })}
+                href="/signin"
+              >
+                Signin
+              </Link>
             </>
           )}
         </div>
