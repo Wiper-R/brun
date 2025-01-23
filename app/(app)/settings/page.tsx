@@ -15,6 +15,7 @@ export default function Page() {
       <div className="flex justify-between items-center my-4">
         <Label>Logout from current device</Label>
         <Link
+          prefetch={false}
           href="/logout"
           className={buttonVariants({
             variant: "destructive",
